@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Vocabulary Practice</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:#eef2ff;
+}
+
+.card{
+background:white;
+width:340px;
+margin:auto;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+img{
+width:200px;
+height:200px;
+object-fit:contain;
+}
+
+button{
+padding:10px 15px;
+margin:5px;
+border:none;
+border-radius:8px;
+background:#4CAF50;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#43a047;
+}
+
+input{
+padding:8px;
+font-size:16px;
+margin-top:10px;
+width:200px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Vocabulary Practice</h2>
+
+<div class="card">
+
+<h3 id="word"></h3>
+<p id="ipa"></p>
+<p id="meaning"></p>
+
+<img id="image">
+
+<br><br>
+
+<button onclick="speak()">🔊 Listen</button>
+
+<button onclick="startSpeak()">🎤 Speak & Check</button>
+
+<br><br>
+
+<input id="answer" placeholder="Type the word">
+
+<br><br>
+
+<button onclick="check()">Check</button>
+
+<button onclick="next()">Next</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+
+let vocab=[
+
+{word:"card",ipa:"/kɑːd/",meaning:"thẻ bài",
+img:"https://cdn-icons-png.flaticon.com/512/3037/3037156.png"},
+
+{word:"block",ipa:"/blɒk/",meaning:"khối đồ chơi",
+img:"https://cdn-icons-png.flaticon.com/512/809/809957.png"},
+
+{word:"dice",ipa:"/daɪs/",meaning:"xúc xắc",
+img:"https://cdn-icons-png.flaticon.com/512/1046/1046784.png"},
+
+{word:"marble",ipa:"/ˈmɑːbl/",meaning:"viên bi",
+img:"https://cdn-icons-png.flaticon.com/512/3103/3103446.png"}
+
+]
+
+let index=0
+
+function show(){
+
+document.getElementById("word").innerText=vocab[index].word
+document.getElementById("ipa").innerText=vocab[index].ipa
+document.getElementById("meaning").innerText=vocab[index].meaning
+document.getElementById("image").src=vocab[index].img
+
+}
+
+function speak(){
+
+let msg=new SpeechSynthesisUtterance(vocab[index].word)
+msg.lang="en-US"
+speechSynthesis.speak(msg)
+
+}
+
+function check(){
+
+let input=document.getElementById("answer").value.toLowerCase()
+
+if(input==vocab[index].word){
+document.getElementById("result").innerHTML="✅ Correct"
+}
+
+else{
+document.getElementById("result").innerHTML="❌ Try again"
+}
+
+}
+
+function next(){
+
+index++
+
+if(index>=vocab.length){
+index=0
+}
+
+document.getElementById("answer").value=""
+document.getElementById("result").innerHTML=""
+
+show()
+
+}
+
+/* SPEAK CHECK */
+
+function startSpeak(){
+
+let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+
+let recognition = new SpeechRecognition()
+
+recognition.lang="en-US"
+
+recognition.start()
+
+recognition.onresult=function(event){
+
+let speech=event.results[0][0].transcript.toLowerCase()
+
+if(speech.includes(vocab[index].word)){
+
+document.getElementById("result").innerHTML="🎤 Correct pronunciation!"
+
+}
+
+else{
+
+document.getElementById("result").innerHTML="🎤 Try again"
+
+}
+
+}
+
+}
+
+show()
+
+</script>
+
+</body>
+</html>
